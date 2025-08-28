@@ -1,0 +1,124 @@
+{
+  "networks": {
+    "filecoin_mainnet": {
+      "chainId": 314,
+      "name": "Filecoin Mainnet",
+      "blocklockAddress": "0x34092470CC59A097d770523931E3bC179370B44b",
+      "rpcUrl": "https://api.node.glif.io/rpc/v1",
+      "explorer": "https://filfox.info",
+      "gasConfig": {
+        "gasLimit": 5000000,
+        "maxFeePerGas": "200000000",
+        "maxPriorityFeePerGas": "200000000",
+        "gasBufferPercent": 400,
+        "callbackGasLimitDefault": 444000000,
+        "gasMultiplierDefault": 50
+      },
+      "blockTime": 30,
+      "defaultBatchSpan": 100,
+      "defaultTxSizeLimit": 1024,
+      "defaultBatchSizeLimit": 10240
+    },
+    "filecoin_calibration": {
+      "chainId": 314159,
+      "name": "Filecoin Calibration Testnet",
+      "blocklockAddress": "0xF00aB3B64c81b6Ce51f8220EB2bFaa2D469cf702",
+      "rpcUrl": "https://api.calibration.node.glif.io/rpc/v1",
+      "explorer": "https://calibration.filfox.info",
+      "gasConfig": {
+        "gasLimit": 5000000,
+        "maxFeePerGas": "200000000",
+        "maxPriorityFeePerGas": "200000000",
+        "gasBufferPercent": 400,
+        "callbackGasLimitDefault": 444000000,
+        "gasMultiplierDefault": 50
+      },
+      "blockTime": 30,
+      "defaultBatchSpan": 100,
+      "defaultTxSizeLimit": 1024,
+      "defaultBatchSizeLimit": 10240
+    },
+    "arbitrum_sepolia": {
+      "chainId": 421614,
+      "name": "Arbitrum Sepolia Testnet",
+      "blocklockAddress": "0xd22302849a87d5B00f13e504581BC086300DA080",
+      "rpcUrl": "https://sepolia-rollup.arbitrum.io/rpc",
+      "explorer": "https://sepolia.arbiscan.io",
+      "gasConfig": {
+        "gasLimit": 100000,
+        "maxFeePerGas": "200000000",
+        "maxPriorityFeePerGas": "200000000",
+        "gasBufferPercent": 100,
+        "callbackGasLimitDefault": 1000000,
+        "gasMultiplierDefault": 10
+      },
+      "blockTime": 1,
+      "defaultBatchSpan": 1000,
+      "defaultTxSizeLimit": 2048,
+      "defaultBatchSizeLimit": 20480
+    },
+    "optimism_sepolia": {
+      "chainId": 11155420,
+      "name": "Optimism Sepolia Testnet",
+      "blocklockAddress": "0xd22302849a87d5B00f13e504581BC086300DA080",
+      "rpcUrl": "https://sepolia.optimism.io",
+      "explorer": "https://sepolia-optimism.etherscan.io",
+      "gasConfig": {
+        "gasLimit": 100000,
+        "maxFeePerGas": "200000000",
+        "maxPriorityFeePerGas": "200000000",
+        "gasBufferPercent": 100,
+        "callbackGasLimitDefault": 1000000,
+        "gasMultiplierDefault": 10
+      },
+      "blockTime": 2,
+      "defaultBatchSpan": 500,
+      "defaultTxSizeLimit": 2048,
+      "defaultBatchSizeLimit": 20480
+    },
+    "base_sepolia": {
+      "chainId": 84532,
+      "name": "Base Sepolia Testnet",
+      "blocklockAddress": "0x82Fed730CbdeC5A2D8724F2e3b316a70A565e27e",
+      "rpcUrl": "https://sepolia.base.org",
+      "explorer": "https://sepolia.basescan.org",
+      "gasConfig": {
+        "gasLimit": 100000,
+        "maxFeePerGas": "200000000",
+        "maxPriorityFeePerGas": "200000000",
+        "gasBufferPercent": 100,
+        "callbackGasLimitDefault": 1000000,
+        "gasMultiplierDefault": 10
+      },
+      "blockTime": 1,
+      "defaultBatchSpan": 1000,
+      "defaultTxSizeLimit": 2048,
+      "defaultBatchSizeLimit": 20480
+    }
+  },
+  "defaultNetwork": "filecoin_calibration",
+  "deployment": {
+    "owner": "0x1234567890123456789012345678901234567890",
+    "sequencer": "0x1234567890123456789012345678901234567890",
+    "dexRouter": "0x1234567890123456789012345678901234567890",
+    "keypers": [
+      "0x1111111111111111111111111111111111111111",
+      "0x2222222222222222222222222222222222222222",
+      "0x3333333333333333333333333333333333333333",
+      "0x4444444444444444444444444444444444444444",
+      "0x5555555555555555555555555555555555555555"
+    ],
+    "threshold": 3
+  },
+  "batchConfig": {
+    "minBatchSpan": 50,
+    "maxBatchSpan": 1000,
+    "minTxSizeLimit": 256,
+    "maxTxSizeLimit": 4096,
+    "minBatchSizeLimit": 2560,
+    "maxBatchSizeLimit": 40960,
+    "minKeyperCount": 3,
+    "maxKeyperCount": 21,
+    "minThreshold": 2
+  }
+}
