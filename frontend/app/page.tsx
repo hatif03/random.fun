@@ -17,14 +17,17 @@ export default function Home() {
                 Just set your goals, define your winners, and let blockchain randomness do the rest. 
                 It&apos;s that easy.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
-                <Link href="/admin" className="btn btn-primary text-center">
-                  Create Campaign
-                </Link>
-                <Link href="/campaign" className="btn text-center">
-                  View Campaign
-                </Link>
-              </div>
+                        <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+            <Link href="/admin" className="btn btn-primary text-center">
+              Create Campaign
+            </Link>
+            <Link href="/campaign" className="btn text-center">
+              View Campaign
+            </Link>
+                  <Link href="/demo" className="btn btn-yellow text-center">
+        Live System
+      </Link>
+          </div>
             </div>
 
             {/* Right Panel - Yellow Background */}
@@ -34,7 +37,7 @@ export default function Home() {
                   Fair Selection
                 </h2>
                 <p className="body-text text-black mb-4 md:mb-6 text-base md:text-lg">
-                  Our system uses Chainlink VRF to ensure truly random and verifiable winner selection. 
+                  Our system uses Randamu VRF to ensure truly random and verifiable winner selection. 
                   No manipulation, no bias - just pure blockchain randomness.
                 </p>
                 <div className="space-y-3 md:space-y-4">
@@ -82,7 +85,7 @@ export default function Home() {
               </div>
               <h3 className="heading-3 mb-3 md:mb-4 text-lg md:text-xl">Random Selection</h3>
               <p className="body-text text-sm md:text-base">
-                Use Chainlink VRF to randomly select winners from your whitelist pool.
+                Use Randamu VRF to randomly select winners from your whitelist pool.
               </p>
             </div>
             
@@ -111,8 +114,11 @@ export default function Home() {
             <Link href="/admin" className="btn btn-primary">
               Start Creating
             </Link>
-            <Link href="/campaign" className="btn btn-pink">
-              View Demo
+                  <Link href="/demo" className="btn btn-pink">
+        Live System
+      </Link>
+            <Link href="/campaign" className="btn btn-yellow">
+              Join Campaign
             </Link>
           </div>
         </div>

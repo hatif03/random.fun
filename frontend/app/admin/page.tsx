@@ -1,49 +1,110 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { deployCampaign, startVRFSelection, depositRewards, getCampaign } from '../../lib/mockService';
+import type { Campaign } from '../../lib/mockData';
+import DemoDashboard from '../../components/DemoDashboard';
 
 export default function AdminDashboard() {
   const [campaignData, setCampaignData] = useState({
     whitelist: '',
-    winners: 10,
-    targetContract: '',
+    winners: 5,
+    targetContract: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
     targetFunction: 'balanceOf(address)',
     targetValue: '10000000',
     status: 'setup'
   });
 
+  const [currentCampaign, setCurrentCampaign] = useState<Campaign | null>(null);
+
   const [isDeploying, setIsDeploying] = useState(false);
   const [isStartingSelection, setIsStartingSelection] = useState(false);
   const [isDepositing, setIsDepositing] = useState(false);
+  const [deploymentHash, setDeploymentHash] = useState<string>('');
+  const [selectionHash, setSelectionHash] = useState<string>('');
+
+  useEffect(() => {
+    loadCurrentCampaign();
+  }, []);
+
+  const loadCurrentCampaign = () => {
+    const campaign = getCampaign();
+    setCurrentCampaign(campaign);
+    setCampaignData(prev => ({
+      ...prev,
+      status: campaign.status
+    }));
+  };
 
   const handleInputChange = (field: string, value: string | number) => {
     setCampaignData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleDeployCampaign = async () => {
+    if (!campaignData.whitelist.trim()) {
+      alert('Please enter whitelist addresses');
+      return;
+    }
+
     setIsDeploying(true);
-    // TODO: Implement smart contract deployment
-    setTimeout(() => {
-      setCampaignData(prev => ({ ...prev, status: 'selection' }));
+    try {
+      const whitelistAddresses = campaignData.whitelist
+        .split('\n')
+        .map(addr => addr.trim())
+        .filter(addr => addr.length > 0);
+
+      const result = await deployCampaign({
+        whitelist: whitelistAddresses,
+        winners: campaignData.winners,
+        targetContract: campaignData.targetContract,
+        targetFunction: campaignData.targetFunction,
+        targetValue: campaignData.targetValue
+      });
+
+      if (result.success) {
+        setDeploymentHash(result.hash);
+        setCampaignData(prev => ({ ...prev, status: 'selection' }));
+        loadCurrentCampaign();
+      }
+    } catch (error) {
+      console.error('Deployment failed:', error);
+      alert('Deployment failed. Please try again.');
+    } finally {
       setIsDeploying(false);
-    }, 2000);
+    }
   };
 
   const handleStartSelection = async () => {
     setIsStartingSelection(true);
-    // TODO: Implement VRF selection
-    setTimeout(() => {
-      setCampaignData(prev => ({ ...prev, status: 'awaiting' }));
+    try {
+      const result = await startVRFSelection();
+      if (result.success) {
+        setSelectionHash(result.requestId);
+        setCampaignData(prev => ({ ...prev, status: 'awaiting' }));
+        loadCurrentCampaign();
+      }
+    } catch (error) {
+      console.error('Selection failed:', error);
+      alert('Selection failed. Please try again.');
+    } finally {
       setIsStartingSelection(false);
-    }, 2000);
+    }
   };
 
   const handleDepositRewards = async () => {
     setIsDepositing(true);
-    // TODO: Implement reward deposit
-    setTimeout(() => {
+    try {
+      const result = await depositRewards('1900', 'USDC');
+      if (result.success) {
+        alert('Rewards deposited successfully!');
+        loadCurrentCampaign();
+      }
+    } catch (error) {
+      console.error('Deposit failed:', error);
+      alert('Deposit failed. Please try again.');
+    } finally {
       setIsDepositing(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -161,33 +222,55 @@ export default function AdminDashboard() {
 
                 <div className="border-t-4 border-black pt-4 md:pt-6">
                   <h3 className="heading-3 mb-3 md:mb-4 text-lg md:text-xl">Campaign Progress</h3>
-                  <div className="space-y-3 md:space-y-4">
-                    <div>
-                      <div className="flex justify-between mb-2">
-                        <span className="caption text-xs md:text-sm">Current TVL</span>
-                        <span className="font-bold text-sm md:text-base">$7,500,000</span>
-                      </div>
-                      <div className="progress-bar">
-                        <div 
-                          className="progress-fill" 
-                          style={{ width: '75%' }}
-                        ></div>
-                      </div>
-                      <div className="text-right mt-1">
-                        <span className="caption text-xs md:text-sm">Target: $10,000,000</span>
-                      </div>
-                    </div>
+                  <div className="space-y-3 md:gap-4">
+                    {currentCampaign && (
+                      <>
+                        <div>
+                          <div className="flex justify-between mb-2">
+                            <span className="caption text-xs md:text-sm">Current TVL</span>
+                            <span className="font-bold text-sm md:text-base">
+                              ${parseInt(currentCampaign.currentValue).toLocaleString()}
+                            </span>
+                          </div>
+                          <div className="progress-bar">
+                            <div 
+                              className="progress-fill" 
+                              style={{ width: `${currentCampaign.progress}%` }}
+                            ></div>
+                          </div>
+                          <div className="text-right mt-1">
+                            <span className="caption text-xs md:text-sm">
+                              Target: ${parseInt(currentCampaign.targetValue).toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
 
-                    <div className="grid grid-cols-2 gap-3 md:gap-4">
-                      <div className="text-center p-3 md:p-4 border-2 border-black bg-white">
-                        <div className="text-xl md:text-2xl font-black">150</div>
-                        <div className="caption text-xs md:text-sm">Whitelist Size</div>
-                      </div>
-                      <div className="text-center p-3 md:p-4 border-2 border-black bg-white">
-                        <div className="text-xl md:text-2xl font-black">10</div>
-                        <div className="caption text-xs md:text-sm">Winners</div>
-                      </div>
-                    </div>
+                        <div className="grid grid-cols-2 gap-3 md:gap-4">
+                          <div className="text-center p-3 md:p-4 border-2 border-black bg-white">
+                            <div className="text-xl md:text-2xl font-black">{currentCampaign.whitelist.length}</div>
+                            <div className="caption text-xs md:text-sm">Whitelist Size</div>
+                          </div>
+                          <div className="text-center p-3 md:p-4 border-2 border-black bg-white">
+                            <div className="text-xl md:text-2xl font-black">{currentCampaign.winners}</div>
+                            <div className="caption text-xs md:text-sm">Winners</div>
+                          </div>
+                        </div>
+
+                        {deploymentHash && (
+                          <div className="p-3 border-2 border-green-500 bg-green-50">
+                            <div className="text-sm font-bold text-green-800">Deployment Hash:</div>
+                            <div className="text-xs font-mono text-green-600 break-all">{deploymentHash}</div>
+                          </div>
+                        )}
+
+                        {selectionHash && (
+                          <div className="p-3 border-2 border-blue-500 bg-blue-50">
+                            <div className="text-sm font-bold text-blue-800">VRF Request ID:</div>
+                            <div className="text-xs font-mono text-blue-600 break-all">{selectionHash}</div>
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -204,6 +287,12 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Demo Dashboard */}
+      <div className="mt-12 md:mt-16">
+        <h2 className="heading-2 mb-6 md:mb-8 text-2xl md:text-3xl lg:text-4xl text-center">Live Demo Dashboard</h2>
+        <DemoDashboard />
       </div>
     </div>
   );

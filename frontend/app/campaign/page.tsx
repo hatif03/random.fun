@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { checkEligibility, checkWinnerStatus, claimRewards, getCampaign } from '../../lib/mockService';
+import type { Campaign, User } from '../../lib/mockData';
 
 export default function CampaignPage() {
   const [userAddress, setUserAddress] = useState('');
@@ -13,44 +15,81 @@ export default function CampaignPage() {
     canClaim: false
   });
 
-  const campaignInfo = {
-    name: "TVL Milestone Campaign",
-    description: "Earn rewards when the protocol reaches $10M in Total Value Locked",
-    whitelistSize: 150,
-    winners: 10,
-    targetValue: "$10,000,000",
-    currentValue: "$7,500,000",
-    progress: 75,
-    status: "awaiting"
+  const [campaign, setCampaign] = useState<Campaign | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    loadCampaign();
+  }, []);
+
+  const loadCampaign = () => {
+    const campaignData = getCampaign();
+    setCampaign(campaignData);
   };
 
   const handleCheckEligibility = async () => {
     if (!userAddress) return;
     setIsCheckingEligibility(true);
-    // TODO: Implement eligibility check
-    setTimeout(() => {
-      setUserStatus(prev => ({ ...prev, isEligible: true }));
+    try {
+      const user = await checkEligibility(userAddress);
+      if (user) {
+        setCurrentUser(user);
+        setUserStatus(prev => ({ 
+          ...prev, 
+          isEligible: user.isEligible,
+          isWinner: user.isWinner,
+          canClaim: user.canClaim
+        }));
+      }
+    } catch (error) {
+      console.error('Eligibility check failed:', error);
+      alert('Failed to check eligibility. Please try again.');
+    } finally {
       setIsCheckingEligibility(false);
-    }, 1500);
+    }
   };
 
   const handleCheckWinner = async () => {
     if (!userAddress) return;
     setIsCheckingWinner(true);
-    // TODO: Implement winner check
-    setTimeout(() => {
-      setUserStatus(prev => ({ ...prev, isWinner: true }));
+    try {
+      const user = await checkWinnerStatus(userAddress);
+      if (user) {
+        setCurrentUser(user);
+        setUserStatus(prev => ({ 
+          ...prev, 
+          isWinner: user.isWinner,
+          canClaim: user.canClaim
+        }));
+      }
+    } catch (error) {
+      console.error('Winner check failed:', error);
+      alert('Failed to check winner status. Please try again.');
+    } finally {
       setIsCheckingWinner(false);
-    }, 1500);
+    }
   };
 
   const handleClaim = async () => {
     if (!userAddress) return;
     setIsClaiming(true);
-    // TODO: Implement reward claiming
-    setTimeout(() => {
+    try {
+      const result = await claimRewards(userAddress);
+      if (result.success) {
+        alert(`Successfully claimed ${result.amount} USDC!`);
+        setUserStatus(prev => ({ ...prev, canClaim: false }));
+        // Reload user data
+        const user = await checkWinnerStatus(userAddress);
+        if (user) {
+          setCurrentUser(user);
+        }
+      }
+    } catch (error) {
+      console.error('Claim failed:', error);
+      alert('Failed to claim rewards. Please try again.');
+    } finally {
       setIsClaiming(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -68,41 +107,51 @@ export default function CampaignPage() {
               <h2 className="heading-2 mb-4 md:mb-6 text-xl md:text-2xl lg:text-3xl text-black">Campaign Details</h2>
               
               <div className="space-y-4 md:space-y-6">
-                <div>
-                  <h3 className="heading-3 mb-2 md:mb-3 text-lg md:text-xl text-black">{campaignInfo.name}</h3>
-                  <p className="body-text text-black text-sm md:text-base">{campaignInfo.description}</p>
-                </div>
+                {campaign ? (
+                  <>
+                    <div>
+                      <h3 className="heading-3 mb-2 md:mb-3 text-lg md:text-xl text-black">{campaign.name}</h3>
+                      <p className="body-text text-black text-sm md:text-base">{campaign.description}</p>
+                    </div>
 
-                <div className="grid grid-cols-2 gap-3 md:gap-4">
-                  <div className="text-center p-3 md:p-4 border-2 border-black bg-white">
-                    <div className="text-xl md:text-2xl font-black">{campaignInfo.whitelistSize}</div>
-                    <div className="caption text-xs md:text-sm">Whitelist Size</div>
-                  </div>
-                  <div className="text-center p-3 md:p-4 border-2 border-black bg-white">
-                    <div className="text-xl md:text-2xl font-black">{campaignInfo.winners}</div>
-                    <div className="caption text-xs md:text-sm">Winners</div>
-                  </div>
-                </div>
+                    <div className="grid grid-cols-2 gap-3 md:gap-4">
+                      <div className="text-center p-3 md:p-4 border-2 border-black bg-white">
+                        <div className="text-xl md:text-2xl font-black">{campaign.whitelist.length}</div>
+                        <div className="caption text-xs md:text-sm">Whitelist Size</div>
+                      </div>
+                      <div className="text-center p-3 md:p-4 border-2 border-black bg-white">
+                        <div className="text-xl md:text-2xl font-black">{campaign.winners}</div>
+                        <div className="caption text-xs md:text-sm">Winners</div>
+                      </div>
+                    </div>
 
-                <div className="border-t-2 border-black pt-3 md:pt-4">
-                  <div className="flex justify-between mb-2">
-                    <span className="caption text-black text-xs md:text-sm">Goal Progress</span>
-                    <span className="font-bold text-black text-sm md:text-base">{campaignInfo.currentValue} / {campaignInfo.targetValue}</span>
-                  </div>
-                  <div className="progress-bar">
-                    <div 
-                      className="progress-fill" 
-                      style={{ width: `${campaignInfo.progress}%` }}
-                    ></div>
-                  </div>
-                </div>
+                    <div className="border-t-2 border-black pt-3 md:pt-4">
+                      <div className="flex justify-between mb-2">
+                        <span className="caption text-black text-xs md:text-sm">Goal Progress</span>
+                        <span className="font-bold text-black text-sm md:text-base">
+                          ${parseInt(campaign.currentValue).toLocaleString()} / ${parseInt(campaign.targetValue).toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="progress-bar">
+                        <div 
+                          className="progress-fill" 
+                          style={{ width: `${campaign.progress}%` }}
+                        ></div>
+                      </div>
+                    </div>
 
-                <div className="flex items-center justify-between">
-                  <span className="caption text-black text-xs md:text-sm">Status:</span>
-                  <span className={`status-badge status-${campaignInfo.status} text-xs md:text-sm`}>
-                    {campaignInfo.status.toUpperCase()}
-                  </span>
-                </div>
+                    <div className="flex items-center justify-between">
+                      <span className="caption text-black text-xs md:text-sm">Status:</span>
+                      <span className={`status-badge status-${campaign.status} text-xs md:text-sm`}>
+                        {campaign.status.toUpperCase()}
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center py-8">
+                    <div className="text-lg font-bold">Loading campaign data...</div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -162,7 +211,7 @@ export default function CampaignPage() {
                     </button>
                   )}
 
-                  {userStatus.isWinner && campaignInfo.status === 'claiming' && (
+                  {userStatus.isWinner && campaign?.status === 'claiming' && (
                     <button
                       className="btn btn-primary w-full text-sm md:text-base"
                       onClick={handleClaim}
@@ -219,7 +268,7 @@ export default function CampaignPage() {
                   </div>
                   <div>
                     <div className="font-bold text-sm md:text-base">Wait for Selection</div>
-                    <div className="text-xs md:text-sm">VRF randomly selects winners from eligible addresses</div>
+                                         <div className="text-xs md:text-sm">Randamu VRF randomly selects winners from eligible addresses</div>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
@@ -229,6 +278,30 @@ export default function CampaignPage() {
                   <div>
                     <div className="font-bold text-sm md:text-base">Claim Rewards</div>
                     <div className="text-xs md:text-sm">Winners can claim once the goal is achieved</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Testing Information */}
+            <div className="card card-yellow">
+              <h3 className="heading-3 mb-3 md:mb-4 text-lg md:text-xl text-black">Testing Information</h3>
+              <div className="space-y-2 md:space-y-3 text-black">
+                <div className="text-sm md:text-base">
+                  <strong>Test Addresses:</strong> Try these addresses to test the system:
+                </div>
+                <div className="space-y-1">
+                  <div className="text-xs font-mono bg-white p-2 border border-black">
+                    0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6 (Winner - 1000 USDC)
+                  </div>
+                  <div className="text-xs font-mono bg-white p-2 border border-black">
+                    0x1234567890123456789012345678901234567890 (Winner - 500 USDC)
+                  </div>
+                  <div className="text-xs font-mono bg-white p-2 border border-black">
+                    0xabcdefabcdefabcdefabcdefabcdefabcdefabcd (Winner - 250 USDC)
+                  </div>
+                  <div className="text-xs font-mono bg-white p-2 border border-black">
+                    0x6666666666666666666666666666666666666666 (Eligible, not winner)
                   </div>
                 </div>
               </div>
