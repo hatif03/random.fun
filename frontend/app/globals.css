@@ -1,0 +1,305 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-pink: #FF6B9D;
+  --primary-yellow: #FFD93D;
+  --primary-black: #000000;
+  --primary-white: #FFFFFF;
+  --accent-blue: #0066FF;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  background-color: var(--primary-white);
+  color: var(--primary-black);
+}
+
+body {
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Brutalist Button Styles */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border: 3px solid var(--primary-black);
+  background: var(--primary-white);
+  color: var(--primary-black);
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 4px 4px 0px var(--primary-black);
+}
+
+@media (min-width: 768px) {
+  .btn {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+}
+
+.btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--primary-black);
+}
+
+.btn:active {
+  transform: translate(0px, 0px);
+  box-shadow: 2px 2px 0px var(--primary-black);
+}
+
+.btn-primary {
+  background: var(--primary-black);
+  color: var(--primary-white);
+}
+
+.btn-pink {
+  background: var(--primary-pink);
+  color: var(--primary-black);
+}
+
+.btn-yellow {
+  background: var(--primary-yellow);
+  color: var(--primary-black);
+}
+
+/* Brutalist Card Styles */
+.card {
+  border: 3px solid var(--primary-black);
+  background: var(--primary-white);
+  padding: 16px;
+  box-shadow: 6px 6px 0px var(--primary-black);
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 24px;
+  }
+}
+
+.card-pink {
+  background: var(--primary-pink);
+}
+
+.card-yellow {
+  background: var(--primary-yellow);
+}
+
+/* Brutalist Input Styles */
+.input {
+  width: 100%;
+  padding: 12px;
+  border: 3px solid var(--primary-black);
+  background: var(--primary-white);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .input {
+    padding: 16px;
+    font-size: 16px;
+  }
+}
+
+.input:focus {
+  outline: none;
+  box-shadow: 4px 4px 0px var(--primary-pink);
+}
+
+/* Progress Bar */
+.progress-bar {
+  width: 100%;
+  height: 32px;
+  border: 3px solid var(--primary-black);
+  background: var(--primary-white);
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .progress-bar {
+    height: 40px;
+  }
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--primary-pink);
+  transition: width 0.3s ease;
+  border-right: 3px solid var(--primary-black);
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border: 2px solid var(--primary-black);
+  background: var(--primary-white);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+@media (min-width: 768px) {
+  .status-badge {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+}
+
+.status-setup { background: var(--primary-yellow); }
+.status-selection { background: var(--primary-pink); }
+.status-awaiting { background: var(--accent-blue); color: var(--primary-white); }
+.status-claiming { background: var(--primary-black); color: var(--primary-white); }
+
+/* Layout Utilities */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 24px;
+  }
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 1024px) {
+  .grid-2 {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+}
+
+/* Typography */
+.heading-1 {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+}
+
+@media (min-width: 768px) {
+  .heading-1 {
+    font-size: 48px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .heading-1 {
+    font-size: 56px;
+  }
+}
+
+.heading-2 {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  .heading-2 {
+    font-size: 32px;
+  }
+}
+
+.heading-3 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  .heading-3 {
+    font-size: 24px;
+  }
+}
+
+.body-text {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+@media (min-width: 768px) {
+  .body-text {
+    font-size: 18px;
+  }
+}
+
+.caption {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@media (min-width: 768px) {
+  .caption {
+    font-size: 14px;
+  }
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobile-menu {
+    display: block;
+  }
+}
+
+/* Responsive adjustments for small screens */
+@media (max-width: 640px) {
+  .card {
+    padding: 12px;
+  }
+  
+  .btn {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+  
+  .input {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  .progress-bar {
+    height: 28px;
+  }
+}
