@@ -13,7 +13,15 @@ export function WalletConnect({ children }: { children: React.ReactNode }) {
 
 export function WalletConnectButton() {
   return (
-    <div className="hidden md:block">
+    <div className="block">
+      <ConnectButton />
+    </div>
+  );
+}
+
+export function MobileWalletConnectButton() {
+  return (
+    <div className="block md:hidden">
       <ConnectButton />
     </div>
   );
