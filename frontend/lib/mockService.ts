@@ -115,9 +115,12 @@ export const checkEligibility = async (address: string): Promise<User | null> =>
     // Create new user if not found
     const newUser: User = {
       address,
+      name: `User ${address.slice(0, 6)}...${address.slice(-4)}`,
       isEligible: mockCampaign.whitelist.includes(address),
       isWinner: false,
-      canClaim: false
+      canClaim: false,
+      hasClaimed: false,
+      joinedAt: new Date()
     };
     mockUsers.push(newUser);
     return newUser;

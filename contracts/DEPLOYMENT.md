@@ -62,3 +62,4 @@ npx hardhat run scripts/deploy-base-sepolia.cjs --network baseSepolia
 - **Insufficient Balance**: Get testnet ETH from faucet
 - **Gas Issues**: Check network congestion and adjust gas price
 - **Contract Verification**: Use Base Sepolia block explorer verification tools
+

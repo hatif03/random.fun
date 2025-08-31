@@ -1,26 +1,27 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getCampaign, getTransactionHistory, getWinnerSelection, simulateTVLUpdate } from '../lib/mockService';
-import type { Campaign, MockTransaction } from '../lib/mockData';
+import { getCampaign, getTransactionHistory, getWinnerSelection, simulateTVLUpdate } from '@/lib/mockService';
+import type { Campaign, MockTransaction, WinnerSelection } from '@/lib/mockData';
 
 export default function DemoDashboard() {
   const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [transactions, setTransactions] = useState<MockTransaction[]>([]);
-  const [winnerSelection, setWinnerSelection] = useState<any>(null);
+  const [winnerSelection, setWinnerSelection] = useState<WinnerSelection | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     loadData();
-    // Auto-update TVL every 10 seconds for demo
-    const interval = setInterval(() => {
-      if (campaign?.status === 'awaiting') {
-        updateTVL();
-      }
-    }, 10000);
-
-    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (campaign?.status === 'awaiting') {
+      const interval = setInterval(() => {
+        loadData();
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [campaign?.status]);
 
   const loadData = () => {
     setCampaign(getCampaign());

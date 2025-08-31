@@ -27,11 +27,14 @@ export interface Reward {
 
 export interface User {
   address: string;
+  name: string;
   isEligible: boolean;
   isWinner: boolean;
   canClaim: boolean;
   claimedAt?: Date;
   rewardAmount?: string;
+  hasClaimed: boolean;
+  joinedAt: Date;
 }
 
 export interface MockTransaction {
@@ -41,6 +44,14 @@ export interface MockTransaction {
   hash?: string;
   timestamp: Date;
   description: string;
+}
+
+export interface WinnerSelection {
+  requestId: string;
+  randomWords: number[];
+  selectedWinners: string[];
+  selectionTimestamp: Date;
+  vrfProvider: string;
 }
 
 // Mock campaign data
@@ -88,50 +99,103 @@ export const mockCampaign: Campaign = {
 export const mockUsers: User[] = [
   {
     address: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
+    name: 'Alice Johnson',
     isEligible: true,
     isWinner: true,
-    canClaim: false,
-    rewardAmount: '1000'
+    canClaim: true,
+    rewardAmount: '1000',
+    hasClaimed: false,
+    joinedAt: new Date('2024-01-15T10:15:00Z')
   },
   {
     address: '0x1234567890123456789012345678901234567890',
+    name: 'Bob Smith',
     isEligible: true,
     isWinner: true,
-    canClaim: false,
-    rewardAmount: '500'
+    canClaim: true,
+    rewardAmount: '500',
+    hasClaimed: false,
+    joinedAt: new Date('2024-01-15T10:20:00Z')
   },
   {
     address: '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd',
+    name: 'Carol Davis',
     isEligible: true,
     isWinner: true,
-    canClaim: false,
-    rewardAmount: '250'
+    canClaim: true,
+    rewardAmount: '250',
+    hasClaimed: false,
+    joinedAt: new Date('2024-01-15T10:25:00Z')
   },
   {
     address: '0x9876543210987654321098765432109876543210',
+    name: 'David Wilson',
     isEligible: true,
     isWinner: true,
-    canClaim: false,
-    rewardAmount: '100'
+    canClaim: true,
+    rewardAmount: '100',
+    hasClaimed: false,
+    joinedAt: new Date('2024-01-15T10:30:00Z')
   },
   {
     address: '0x5555555555555555555555555555555555555555',
+    name: 'Eva Brown',
     isEligible: true,
     isWinner: true,
-    canClaim: false,
-    rewardAmount: '50'
+    canClaim: true,
+    rewardAmount: '50',
+    hasClaimed: false,
+    joinedAt: new Date('2024-01-15T10:35:00Z')
   },
   {
     address: '0x6666666666666666666666666666666666666666',
+    name: 'Frank Miller',
     isEligible: true,
     isWinner: false,
-    canClaim: false
+    canClaim: false,
+    rewardAmount: '0',
+    hasClaimed: false,
+    joinedAt: new Date('2024-01-15T10:40:00Z')
   },
   {
     address: '0x7777777777777777777777777777777777777777',
+    name: 'Grace Lee',
     isEligible: true,
     isWinner: false,
-    canClaim: false
+    canClaim: false,
+    rewardAmount: '0',
+    hasClaimed: false,
+    joinedAt: new Date('2024-01-15T10:45:00Z')
+  },
+  {
+    address: '0x8888888888888888888888888888888888888888',
+    name: 'Henry Taylor',
+    isEligible: true,
+    isWinner: false,
+    canClaim: false,
+    rewardAmount: '0',
+    hasClaimed: false,
+    joinedAt: new Date('2024-01-15T10:50:00Z')
+  },
+  {
+    address: '0x9999999999999999999999999999999999999999',
+    name: 'Ivy Chen',
+    isEligible: true,
+    isWinner: false,
+    canClaim: false,
+    rewardAmount: '0',
+    hasClaimed: false,
+    joinedAt: new Date('2024-01-15T10:55:00Z')
+  },
+  {
+    address: '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    name: 'Jack Anderson',
+    isEligible: true,
+    isWinner: false,
+    canClaim: false,
+    rewardAmount: '0',
+    hasClaimed: false,
+    joinedAt: new Date('2024-01-15T11:00:00Z')
   }
 ];
 
@@ -176,7 +240,7 @@ export const mockTVLData = [
 ];
 
 // Mock winner selection data
-export const mockWinnerSelection = {
+export const mockWinnerSelection: WinnerSelection = {
   requestId: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
   randomWords: [12345, 67890, 11111, 22222, 33333],
   selectedWinners: [

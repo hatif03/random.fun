@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { checkEligibility, checkWinnerStatus, claimRewards, getCampaign } from '../../lib/mockService';
-import type { Campaign, User } from '../../lib/mockData';
+import type { Campaign } from '../../lib/mockData';
 
 export default function CampaignPage() {
   const [userAddress, setUserAddress] = useState('');
@@ -16,7 +16,6 @@ export default function CampaignPage() {
   });
 
   const [campaign, setCampaign] = useState<Campaign | null>(null);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
     loadCampaign();
@@ -33,7 +32,6 @@ export default function CampaignPage() {
     try {
       const user = await checkEligibility(userAddress);
       if (user) {
-        setCurrentUser(user);
         setUserStatus(prev => ({ 
           ...prev, 
           isEligible: user.isEligible,
@@ -55,7 +53,6 @@ export default function CampaignPage() {
     try {
       const user = await checkWinnerStatus(userAddress);
       if (user) {
-        setCurrentUser(user);
         setUserStatus(prev => ({ 
           ...prev, 
           isWinner: user.isWinner,
@@ -81,7 +78,7 @@ export default function CampaignPage() {
         // Reload user data
         const user = await checkWinnerStatus(userAddress);
         if (user) {
-          setCurrentUser(user);
+          setUserStatus(prev => ({ ...prev, isWinner: user.isWinner, canClaim: user.canClaim }));
         }
       }
     } catch (error) {

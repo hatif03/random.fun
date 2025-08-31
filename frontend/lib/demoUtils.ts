@@ -1,19 +1,11 @@
-import { mockCampaign, mockUsers, mockWinnerSelection } from './mockData';
+import { mockCampaign } from './mockData';
 
 // Demo configuration
 export const DEMO_CONFIG = {
-  campaignName: 'TVL Milestone Campaign',
-  description: 'Earn rewards when the protocol reaches $10M in Total Value Locked',
-  targetValue: 10000000,
-  whitelistSize: 15,
-  winners: 5,
-  rewardTiers: [
-    { amount: '1000', token: 'USDC', description: '1st Place' },
-    { amount: '500', token: 'USDC', description: '2nd Place' },
-    { amount: '250', token: 'USDC', description: '3rd Place' },
-    { amount: '100', token: 'USDC', description: '4th Place' },
-    { amount: '50', token: 'USDC', description: '5th Place' }
-  ]
+  title: 'VRF Campaign System Demo',
+  description: 'Interactive demonstration of the VRF Campaign System',
+  duration: '5 minutes',
+  features: ['Campaign Setup', 'VRF Selection', 'Reward Distribution', 'User Claims']
 };
 
 // Demo addresses for testing

@@ -3,13 +3,11 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import DemoDashboard from '../../components/DemoDashboard';
-import { getCampaign, getTransactionHistory, getWinnerSelection } from '../../lib/mockService';
-import type { Campaign, MockTransaction } from '../../lib/mockData';
+import { getCampaign } from '../../lib/mockService';
+import type { Campaign } from '../../lib/mockData';
 
 export default function DemoPage() {
   const [campaign, setCampaign] = useState<Campaign | null>(null);
-  const [transactions, setTransactions] = useState<MockTransaction[]>([]);
-  const [winnerSelection, setWinnerSelection] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'workflow' | 'testing'>('overview');
 
   useEffect(() => {
@@ -18,12 +16,6 @@ export default function DemoPage() {
 
   const loadData = () => {
     setCampaign(getCampaign());
-    setTransactions(getTransactionHistory());
-    setWinnerSelection(getWinnerSelection());
-  };
-
-  const formatAddress = (address: string) => {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
   const formatDate = (date: Date) => {
