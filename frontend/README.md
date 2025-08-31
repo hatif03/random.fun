@@ -1,4 +1,4 @@
-# Campaign Manager Frontend
+# pump.fun Frontend
 
 A modern, brutalist-design frontend for managing VRF-powered campaigns built with Next.js, TypeScript, and Tailwind CSS.
 

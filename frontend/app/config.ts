@@ -2,7 +2,7 @@ import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { baseSepolia } from 'wagmi/chains';
 
 export const config = getDefaultConfig({
-  appName: 'Campaign Manager',
+  appName: 'pump.fun',
   projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || 'default-project-id',
   chains: [baseSepolia],
   ssr: true,
@@ -228,13 +228,6 @@ export const CONTRACT_ABI = [
 		"name": "setSubId",
 		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "topUpSubscriptionNative",
-		"outputs": [],
-		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
